@@ -11,4 +11,13 @@ const login = async ({ body }, res) => {
   res.status(OK_STATUS).json({ token });
 };
 
-module.exports = { login };
+const getAll = async (__req, res) => {
+  const data = await userService.fetchAll();
+  res.status(OK_STATUS).json(data);
+};
+
+const getById = async (req, res) => {
+
+};
+
+module.exports = { login, getAll, getById };

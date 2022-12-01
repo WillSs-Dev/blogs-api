@@ -27,4 +27,9 @@ const login = async ({ email, password }) => {
   return { type: OK, token };
 };
 
-module.exports = { login };
+const fetchAll = async () => {
+  const users = await User.findAll();
+  return users;
+};
+
+module.exports = { login, fetchAll };
