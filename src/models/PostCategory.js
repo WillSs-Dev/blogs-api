@@ -2,35 +2,37 @@ const PostCategoryModel = (sequelize, DataTypes) => {
   const PostCategory = sequelize.define(
     'PostCategory',
     {
-      post_id: {
+      postId: {
         allowNull: false,
         primaryKey: true,
+        foreignKey: true,
         type: DataTypes.INTEGER,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
-      category_id: {
+      categoryId: {
         allowNull: false,
         primaryKey: true,
+        foreignKey: true,
         type: DataTypes.INTEGER,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
     },
     {
       timestamps: false,
-      tableName: 'Categorys',
+      underscored: true,
+      tableName: 'posts_categories',
     }
   );
 
   PostCategory.associate = (models) => {
-    PostCategory.hasOne(models.Category, {
-      foreignKey: 'id',
-      as: 'category_id',
+    models.Category.belongsToMany(models.BlogPost, { 
+      foreignKey: 'categoryId', 
+      as: 'BlogPost',
+      through: PostCategory,
     });
-    PostCategory.hasOne(models.BlogPost, {
-      foreignKey: 'id',
-      as: 'post_id',
+
+    models.BlogPost.belongsToMany(models.Category, { 
+      foreignKey: 'postId', 
+      as: 'Category',
+      through: PostCategory,
     });
   };
 
