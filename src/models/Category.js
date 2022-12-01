@@ -12,7 +12,7 @@ const CategoryModel = (sequelize, DataTypes) => {
     },
   },{
     timestamps: false,
-    tableName: 'Categorys',
+    tableName: 'categories',
   });
 
   Category.associate = (models) => {
