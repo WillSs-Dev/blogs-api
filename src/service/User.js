@@ -28,7 +28,9 @@ const login = async ({ email, password }) => {
 };
 
 const fetchAll = async () => {
-  const users = await User.findAll();
+  const users = await User.findAll({
+    attributes: { exclude: ['password'] },
+  });
   return users;
 };
 
