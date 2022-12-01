@@ -22,7 +22,7 @@ const login = async ({ email, password }) => {
       data: { user: { name: user[0].dataValues.displayName, email, password } },
     },
     secret,
-    jwtConfig
+    jwtConfig,
   );
   return { type: OK, token };
 };
