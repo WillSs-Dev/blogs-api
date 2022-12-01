@@ -1,6 +1,6 @@
-const PostCategorieModel = (sequelize, DataTypes) => {
-  const PostCategorie = sequelize.define(
-    'PostCategorie',
+const PostCategoryModel = (sequelize, DataTypes) => {
+  const PostCategory = sequelize.define(
+    'PostCategory',
     {
       post_id: {
         allowNull: false,
@@ -19,22 +19,22 @@ const PostCategorieModel = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
-      tableName: 'categories',
+      tableName: 'Categorys',
     }
   );
 
-  PostCategorie.associate = (models) => {
-    PostCategorie.hasOne(models.Categories, {
+  PostCategory.associate = (models) => {
+    PostCategory.hasOne(models.Category, {
       foreignKey: 'id',
       as: 'category_id',
     });
-    PostCategorie.hasOne(models.BlogPosts, {
+    PostCategory.hasOne(models.BlogPost, {
       foreignKey: 'id',
       as: 'post_id',
     });
   };
 
-  return PostCategorie;
+  return PostCategory;
 };
 
-module.exports = PostCategorieModel;
+module.exports = PostCategoryModel;
