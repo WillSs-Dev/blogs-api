@@ -2,6 +2,7 @@ const userService = require('../service/User');
 
 const OK_STATUS = 200;
 const BAD_REQUEST = 400;
+const NOT_FOUND = 404;
 
 const login = async ({ body }, res) => {
   const { type, token } = await userService.login(body);
@@ -12,12 +13,16 @@ const login = async ({ body }, res) => {
 };
 
 const getAll = async (__req, res) => {
-  const data = await userService.fetchAll();
-  res.status(OK_STATUS).json(data);
+  const users = await userService.fetchAll();
+  res.status(OK_STATUS).json(users);
 };
 
-const getById = async (req, res) => {
-
+const getById = async ({ params }, res) => {
+  const { type, data } = await userService.fetchById(params.id);
+  if (!type) {
+    return res.status(NOT_FOUND).json({ message: 'User does not exist' });
+  }
+  res.status(OK_STATUS).json(data);
 };
 
 module.exports = { login, getAll, getById };

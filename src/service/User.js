@@ -22,7 +22,7 @@ const login = async ({ email, password }) => {
       data: { user: { name: user[0].dataValues.displayName, email, password } },
     },
     secret,
-    jwtConfig,
+    jwtConfig
   );
   return { type: OK, token };
 };
@@ -32,4 +32,14 @@ const fetchAll = async () => {
   return users;
 };
 
-module.exports = { login, fetchAll };
+const fetchById = async (id) => {
+  try {
+    const { dataValues: user } = await User.findByPk(id);
+    delete user.password;
+    return { type: OK, data: user };
+  } catch (__e) {
+    return { type: ERROR };
+  }
+};
+
+module.exports = { login, fetchAll, fetchById };
