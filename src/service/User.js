@@ -14,6 +14,9 @@ const login = async ({ email, password }) => {
       password,
     },
   });
+  if (!user.length) {
+    return { type: ERROR };
+  }
   const token = jwt.sign(
     {
       data: { user: { name: user[0].dataValues.displayName, email, password } },
@@ -21,9 +24,6 @@ const login = async ({ email, password }) => {
     secret,
     jwtConfig,
   );
-  if (!user.length) {
-    return { type: ERROR };
-  }
   return { type: OK, token };
 };
 
