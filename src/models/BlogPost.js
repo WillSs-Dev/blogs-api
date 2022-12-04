@@ -37,10 +37,10 @@ const BlogPostModel = (sequelize, DataTypes) => {
   );
 
   BlogPost.associate = ({ User }) => {
-    BlogPost.belongsToMany(User, {
+    BlogPost.belongsTo(User, {
       foreignKey: 'userId',
       as: 'user',
-      through: BlogPost,
+      // through: BlogPost,
     });
   };
 

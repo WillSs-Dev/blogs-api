@@ -2,13 +2,12 @@ const { BlogPost, Category, User } = require('../models');
 
 const fetchAll = async () => {
   const posts = await BlogPost.findAll({
-    attributes: { exclude: ['UserId'] },
     include: [
       {
         model: User,
         as: 'user',
         attributes: { exclude: ['password'] },
-        through: { attributes: [] },
+        // through: { attributes: [] },
       },
       {
         model: Category,
