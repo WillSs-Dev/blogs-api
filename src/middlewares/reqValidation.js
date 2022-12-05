@@ -16,12 +16,20 @@ const userSchema = Joi.object({
   image: Joi.string(),
 });
 
+const postSchema = Joi.object({
+  title: Joi.string().alphanum().required(),
+  content: Joi.string().required(),
+  categoryIds: Joi.array().items(Joi.number().required()).required(),
+});
+
 const BAD_REQUEST = 400;
 
 const validateLoginRequest = ({ body }, res, next) => {
   const { error } = loginSchema.validate(body);
   if (error) {
-    return res.status(BAD_REQUEST).json({ message: 'Some required fields are missing' });
+    return res
+      .status(BAD_REQUEST)
+      .json({ message: 'Some required fields are missing' });
   }
   next();
 };
@@ -44,4 +52,22 @@ const validateUserRequest = ({ body }, res, next) => {
   next();
 };
 
-module.exports = { validateLoginRequest, validateCategoryRequest, validateUserRequest };
+const validatePostRequest = ({ body }, res, next) => {
+  const { error } = postSchema.validate(body);
+  if (error) {
+    const { details } = error;
+    const [detail] = details;
+    if (detail.type === 'array.includesRequiredUnknowns') {
+      return res.status(BAD_REQUEST).json({ message: 'one or more "categoryIds" not found' });
+    }
+    return res.status(BAD_REQUEST).json({ message: 'Some required fields are missing' });
+  }
+  next();
+};
+
+module.exports = {
+  validateLoginRequest,
+  validateCategoryRequest,
+  validateUserRequest,
+  validatePostRequest,
+};
