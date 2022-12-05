@@ -1,5 +1,5 @@
 const express = require('express');
-const { validateLoginRequest } = require('./middlewares/reqValidation');
+const { validateLoginRequest, validateCategoryRequest } = require('./middlewares/reqValidation');
 const userController = require('./controller/User');
 const categoryController = require('./controller/Category');
 const blogPostController = require('./controller/BlogPost.js');
@@ -23,6 +23,8 @@ app.get('/categories', validateToken, categoryController.getAll);
 app.get('/post', validateToken, blogPostController.getAll);
 
 app.get('/post/:id', validateToken, blogPostController.getById);
+
+app.post('/categories', validateToken, validateCategoryRequest, categoryController.add);
 
 // É importante exportar a constante `app`,
 // para que possa ser utilizada pelo arquivo `src/server.js`
