@@ -1,6 +1,7 @@
 const blogPostService = require('../service/BlogPosts');
 
 const OK_STATUS = 200;
+const CREATED = 201;
 const NOT_FOUND = 404;
 
 const getAll = async (__req, res) => {
@@ -16,4 +17,9 @@ const getById = async ({ params }, res) => {
   res.status(OK_STATUS).json(data);
 };
 
-module.exports = { getAll, getById };
+const add = async ({ body, headers }, res) => {
+  const { data } = await blogPostService.insert(body, headers);
+  res.status(CREATED).json(data);
+};
+
+module.exports = { getAll, getById, add };

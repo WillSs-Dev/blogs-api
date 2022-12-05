@@ -1,5 +1,7 @@
-const { BlogPost, Category, User } = require('../models');
+const jwt = require('jsonwebtoken');
+const { BlogPost, Category, User, PostCategory } = require('../models');
 
+const secret = process.env.JWT_SECRET || '$uper$ecretk£y';
 const OK = 1;
 const ERROR = 0;
 
@@ -40,4 +42,29 @@ const fetchById = async (id) => {
   }
 };
 
-module.exports = { fetchAll, fetchById };
+const getEmailFromToken = (token) => {
+  const { data } = jwt.verify(token, secret);
+  return data.user.email;
+};
+
+const insert = async (body, { authorization }) => {
+  const email = getEmailFromToken(authorization);
+  const [user] = await User.findAll({
+    attributes: ['id'],
+    where: {
+      email,
+    },
+  });
+  const newPost = await BlogPost.create(
+    { ...body, userId: user.dataValues.id, updated: new Date(), published: new Date() },
+    );
+  const { categoryIds } = body;
+  const { id } = newPost;
+  const promisses = categoryIds.map((categoryId) => PostCategory.create(
+    { postId: id, categoryId },
+  ));
+  await Promise.all(promisses);
+  return { data: newPost };
+};
+
+module.exports = { fetchAll, fetchById, insert };

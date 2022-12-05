@@ -1,7 +1,8 @@
 const express = require('express');
 const { validateLoginRequest,
   validateCategoryRequest,
-  validateUserRequest } = require('./middlewares/reqValidation');
+  validateUserRequest,
+  validatePostRequest } = require('./middlewares/reqValidation');
 const userController = require('./controller/User');
 const categoryController = require('./controller/Category');
 const blogPostController = require('./controller/BlogPost.js');
@@ -25,6 +26,8 @@ app.get('/categories', validateToken, categoryController.getAll);
 app.get('/post', validateToken, blogPostController.getAll);
 
 app.get('/post/:id', validateToken, blogPostController.getById);
+
+app.post('/post', validateToken, validatePostRequest, blogPostController.add);
 
 app.post('/categories', validateToken, validateCategoryRequest, categoryController.add);
 
