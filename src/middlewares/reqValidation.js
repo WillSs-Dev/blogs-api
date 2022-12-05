@@ -9,6 +9,13 @@ const categorySchema = Joi.object({
   name: Joi.string().required(),
 });
 
+const userSchema = Joi.object({
+  displayName: Joi.string().min(8).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().alphanum().min(6).required(),
+  image: Joi.string(),
+});
+
 const BAD_REQUEST = 400;
 
 const validateLoginRequest = ({ body }, res, next) => {
@@ -27,4 +34,14 @@ const validateCategoryRequest = ({ body }, res, next) => {
   next();
 };
 
-module.exports = { validateLoginRequest, validateCategoryRequest };
+const validateUserRequest = ({ body }, res, next) => {
+  const { error } = userSchema.validate(body);
+  if (error) {
+    const { details } = error;
+    const [detail] = details;
+    return res.status(BAD_REQUEST).json({ message: detail.message });
+  }
+  next();
+};
+
+module.exports = { validateLoginRequest, validateCategoryRequest, validateUserRequest };
