@@ -17,7 +17,7 @@ const userSchema = Joi.object({
 });
 
 const postSchema = Joi.object({
-  title: Joi.string().alphanum().required(),
+  title: Joi.string().required(),
   content: Joi.string().required(),
   categoryIds: Joi.array().items(Joi.number().required()).required(),
 });
