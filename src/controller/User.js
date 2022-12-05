@@ -1,8 +1,10 @@
 const userService = require('../service/User');
 
 const OK_STATUS = 200;
+const CREATED = 201;
 const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
+const CONFLICT = 409;
 
 const login = async ({ body }, res) => {
   const { type, token } = await userService.login(body);
@@ -25,4 +27,12 @@ const getById = async ({ params }, res) => {
   res.status(OK_STATUS).json(data);
 };
 
-module.exports = { login, getAll, getById };
+const add = async ({ body }, res) => {
+  const { type, data } = await userService.insert(body);
+  if (!type) {
+    return res.status(CONFLICT).json({ message: 'User already registered' });
+  }
+  res.status(CREATED).json({ token: data });
+};
+
+module.exports = { login, getAll, getById, add };

@@ -19,7 +19,7 @@ const login = async ({ email, password }) => {
   }
   const token = jwt.sign(
     {
-      data: { user: { name: user[0].dataValues.displayName, email, password } },
+      data: { user: { name: user[0].dataValues.displayName, email } },
     },
     secret,
     jwtConfig,
@@ -44,4 +44,21 @@ const fetchById = async (id) => {
   }
 };
 
-module.exports = { login, fetchAll, fetchById };
+const insert = async (user) => {
+  const [search] = await User.findAll({ where: { email: user.email } });
+  if (search) {
+    return { type: ERROR };
+  }
+  const { displayName, email, image = '' } = user;
+  await User.create(user);
+  const token = jwt.sign({
+    data: {
+      user: { displayName, email, image },
+    },
+  },
+  secret,
+  jwtConfig);
+  return { type: OK, data: token };
+};
+
+module.exports = { login, fetchAll, fetchById, insert };
