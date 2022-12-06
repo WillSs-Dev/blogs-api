@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { Category } = require('../models');
 
 const loginSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -52,7 +53,15 @@ const validateUserRequest = ({ body }, res, next) => {
   next();
 };
 
-const validatePostRequest = ({ body }, res, next) => {
+const validatePostRequest = async ({ body }, res, next) => {
+  const categories = await Category.findAll({ attributes: ['id'] });
+  const { categoryIds } = body;
+  const idsInTheDb = [];
+  categories.forEach((category) => idsInTheDb.push(category.dataValues.id));
+  const categoriesExist = categoryIds.every((category) => idsInTheDb.includes(category));
+  if (!categoriesExist) {
+    return res.status(BAD_REQUEST).json({ message: 'one or more "categoryIds" not found' });
+  }
   const { error } = postSchema.validate(body);
   if (error) {
     const { details } = error;
